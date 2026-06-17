@@ -42,7 +42,7 @@ button{font-family:inherit;cursor:pointer}
 .pbh-tile .k{margin-bottom:6px}
 .dist{display:flex;align-items:flex-end;gap:18px;height:88px;padding:0 4px}
 .dist .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
-.dist .bar{width:100%;border-radius:6px 6px 0 0;min-height:5px;flex-shrink:0;transition:height .8s cubic-bezier(.4,0,.1,1)}
+.dist .bar{width:100%;border-radius:6px 6px 0 0;min-height:5px;transition:height .8s cubic-bezier(.4,0,.1,1)}
 .dist .cnt{font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:4px}
 .dist .lab{font-size:11px;color:var(--muted);margin-top:6px}
 
@@ -131,20 +131,13 @@ tbody td{padding:13px 18px;font-size:13.5px;vertical-align:middle}
 .live-card .lh .badge{margin-left:auto;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-deep);display:flex;align-items:center;gap:5px}
 .live-card .lh .badge .g{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:blink 1.8s infinite}
 .stream{padding:16px 18px;display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto}
-.b{max-width:80%;padding:9px 12px;border-radius:12px;font-size:13.5px;line-height:1.45;white-space:pre-wrap}
+.b{max-width:80%;padding:9px 12px;border-radius:12px;font-size:13.5px;line-height:1.45}
 .b.customer{background:#eef3f1;align-self:flex-start;border-bottom-left-radius:4px}
 .b.twin{background:#e7f4f1;align-self:flex-end;border-bottom-right-radius:4px}
-.b.human{background:var(--ink);color:#eaf0ee;align-self:flex-end;border-bottom-right-radius:4px}
 .take{align-self:flex-start;font-size:11.5px;color:var(--muted);font-style:italic;margin:-4px 0 2px;display:flex;gap:6px}
 .take b{font-family:var(--mono);font-style:normal;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal-deep);white-space:nowrap;padding-top:1px}
-.stream .empty{color:var(--muted-2);font-size:12.5px;text-align:center;padding:22px 0}
-.ctrl{display:flex;flex-wrap:wrap;gap:9px;padding:12px 18px;border-top:1px solid var(--line)}
+.ctrl{display:flex;gap:9px;padding:12px 18px;border-top:1px solid var(--line)}
 .ctrl .takeover{background:var(--ink);color:#fff;border:0;border-radius:9px;font-weight:600;font-size:13px;padding:9px 15px}
-.ctrl .takeover.on{background:var(--teal-deep)}
-.ctrl .hinput{flex:1;min-width:140px;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-family:inherit;font-size:13px;color:var(--ink)}
-.ctrl .hinput:disabled{background:var(--paper);color:var(--muted-2)}
-.ctrl .hsend{background:var(--teal);color:#04221e;border:0;border-radius:9px;font-weight:600;font-size:13px;padding:9px 15px}
-.ctrl .hsend:disabled{opacity:.45;cursor:default}
 .ctrl .reset{background:none;border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:13px;padding:9px 13px}
 .casebox{background:var(--ink);color:#e8efed;border-radius:13px;padding:18px 19px}
 .casebox.intervene{background:#3a2a16}
@@ -159,7 +152,11 @@ tbody td{padding:13px 18px;font-size:13.5px;vertical-align:middle}
 
 <div class="topbar">
   <div class="brand">
-    <div><h1>Engagement Dashboard</h1></div>
+    <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+      <rect width="40" height="40" rx="9" fill="#0f9e8e" opacity="0.16"/>
+      <path d="M6 21 L13 21 L16 11 L21 29 L25 18 L28 21 L34 21" stroke="#3fd9c6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div><h1>Engagement OS</h1><small>Relationship vitals</small></div>
   </div>
   <div class="live-tag"><span class="g"></span> Live book</div>
 </div>
@@ -183,27 +180,7 @@ tbody td{padding:13px 18px;font-size:13.5px;vertical-align:middle}
 <!-- DETAIL -->
 <div class="wrap hidden" id="detail"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, addDoc, updateDoc, getDoc, getDocs, writeBatch, query, orderBy, onSnapshot, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-// Firebase config stays as-is.
-const firebaseConfig = {
-  apiKey: "AIzaSyB-_ooiEhmIRoOGxgrueJKJHv6DOj-kpGE",
-  authDomain: "engagement-os-c0294.firebaseapp.com",
-  projectId: "engagement-os-c0294",
-  storageBucket: "engagement-os-c0294.firebasestorage.app",
-  messagingSenderId: "262777909440",
-  appId: "1:262777909440:web:4662437f82eca8249b3d25",
-  measurementId: "G-9344JJVN4R"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Ensure the one live seat exists. No seed button, every other company is hardcoded.
-setDoc(doc(db, "accounts", "democo"), { name: "DemoCo", mode: "ai" }, { merge: true });
-
+<script>
 const KOTTER=["Urgency","Coalition","Vision","Short-term wins","Consolidation","Expansion"];
 
 const accounts={
@@ -282,7 +259,7 @@ function renderTop(){
   const med=ORDER.filter(id=>accounts[id].band==="med").length;
   const hi=ORDER.filter(id=>accounts[id].band==="hi").length;
   const max=Math.max(lo,med,hi,1);
-  const col=(c,n,lab)=>`<div class="col"><div class="cnt">${n}</div><div class="bar" style="background:${c};height:${Math.max(6,(n/max)*50)}px"></div><div class="lab">${lab}</div></div>`;
+  const col=(c,n,lab)=>`<div class="col"><div class="cnt">${n}</div><div class="bar" style="background:${c};height:${Math.max(8,(n/max)*92)}%"></div><div class="lab">${lab}</div></div>`;
   document.getElementById("toprow").innerHTML=`
     <div class="kpi"><div class="k">Expansion pipeline</div><div class="v">$210K</div><div class="sub">1 ready · 1 soon</div></div>
     <div class="kpi"><div class="k">Active this week</div><div class="v">47<small> chats</small></div><div class="sub">+9 vs last week</div></div>
@@ -305,7 +282,7 @@ function renderRows(){
 }
 
 const RECENTS=[
-  {id:"democo",name:"DemoCo",active:true,status:"Active now",line:"“Where do I see the report after the call?”"},
+  {id:"democo",name:"DemoCo",active:true,status:"Active now",line:"\u201cWhere do I see the report after the call?\u201d"},
   {id:"lumen",name:"Lumen Financial",active:false,status:"2h ago",takes:["Expansion intent, second team named","Wants hiring-manager visibility"]},
   {id:"vertex",name:"Vertex Logistics",active:false,status:"5h ago",takes:["Adoption stuck at one user","Urgency never established"]}
 ];
@@ -313,7 +290,7 @@ function renderRecents(){
   document.getElementById("recents").innerHTML=RECENTS.map(r=>{
     const body=r.active
       ? `<div class="line">${r.line}</div><div class="cta"><button class="stepin" onclick="openDetail('${r.id}')">Step in →</button></div>`
-      : `<div class="takes">${r.takes.map(t=>`<div class="tk"><span class="b">↳</span><span>${t}</span></div>`).join("")}</div><div class="cta"><button class="view" onclick="openDetail('${r.id}')">View conversation</button></div>`;
+      : `<div class="takes">${r.takes.map(t=>`<div class="tk"><span class="b">\u21b3</span><span>${t}</span></div>`).join("")}</div><div class="cta"><button class="view" onclick="openDetail('${r.id}')">View conversation</button></div>`;
     return `<div class="rec ${r.active?'active':''}">
       <div class="rt"><span class="nm">${r.name}</span><span class="st">${r.active?'<span class="g"></span>':''}${r.status}</span></div>
       ${body}
@@ -335,117 +312,15 @@ function trendSVG(data,color){
 }
 function sentBar(split){const[p,n,g]=split;return `<div class="sent"><i class="pos" style="width:${p}%"></i><i class="neu" style="width:${n}%"></i><i class="neg" style="width:${g}%"></i></div>`;}
 
-const portfolio=document.getElementById("portfolio");
-const detail=document.getElementById("detail");
-
-// All message text renders via textContent (XSS guard). Never innerHTML for message text.
-function bubble(role,text){
-  const b=document.createElement("div");
-  b.className="b "+role;
-  b.textContent=text;
-  return b;
-}
-function takeawayEl(text){
-  const t=document.createElement("div"); t.className="take";
-  const lab=document.createElement("b"); lab.textContent="Takeaway";
-  const s=document.createElement("span"); s.textContent=text;
-  t.append(lab,s);
-  return t;
-}
-function renderStaticChat(streamEl,chat){
-  streamEl.innerHTML="";
-  chat.forEach(m=>{
-    streamEl.appendChild(bubble(m[0],m[1]));
-    if(m[0]==="customer" && m[2]) streamEl.appendChild(takeawayEl(m[2]));
-  });
-  streamEl.scrollTop=streamEl.scrollHeight;
-}
-
-// Live wiring, DemoCo only.
-let liveUnsub=null, liveMode="ai";
-function stopLive(){ if(liveUnsub){ liveUnsub(); liveUnsub=null; } }
-
-function wireLive(id,streamEl){
-  const toggle=document.getElementById("toggle");
-  const hinput=document.getElementById("hinput");
-  const hsend=document.getElementById("hsend");
-  const resetBtn=document.getElementById("reset");
-
-  function setTakeoverUI(){
-    const on = liveMode==="human";
-    toggle.classList.toggle("on", on);
-    toggle.textContent = on ? "Hand back to twin" : "Take over";
-    hinput.disabled=!on; hsend.disabled=!on;
-  }
-  // reflect the real current mode on open
-  getDoc(doc(db,"accounts",id)).then(s=>{ liveMode=(s.exists()&&s.data().mode)||"ai"; setTakeoverUI(); });
-
-  toggle.onclick=async()=>{
-    liveMode = liveMode==="human" ? "ai" : "human";
-    await updateDoc(doc(db,"accounts",id), { mode: liveMode });
-    setTakeoverUI();
-  };
-  async function sendHuman(){
-    if(liveMode!=="human") return;
-    const text=hinput.value.trim(); if(!text) return; hinput.value="";
-    await addDoc(collection(db,"conversations",id,"messages"), { role:"human", text, takeaway:null, createdAt: serverTimestamp() });
-  }
-  hsend.onclick=sendHuman;
-  hinput.addEventListener("keydown", e=>{ if(e.key==="Enter") sendHuman(); });
-
-  resetBtn.onclick=async()=>{
-    if(!confirm("Delete all messages for this account? This cannot be undone.")) return;
-    resetBtn.disabled=true;
-    try{
-      const snap=await getDocs(collection(db,"conversations",id,"messages"));
-      let batch=writeBatch(db), pending=0;
-      for(const d of snap.docs){
-        batch.delete(d.ref); pending++;
-        if(pending===450){ await batch.commit(); batch=writeBatch(db); pending=0; }
-      }
-      if(pending>0) await batch.commit();
-      // the live panel empties on its own via the onSnapshot listener
-    }catch(err){
-      console.error("reset failed", err);
-      alert("Reset failed. Check the console.");
-    }finally{
-      resetBtn.disabled=false;
-    }
-  };
-
-  // stream real messages, newest at the bottom, auto-scroll
-  stopLive();
-  liveUnsub = onSnapshot(query(collection(db,"conversations",id,"messages"), orderBy("createdAt","asc")), (snap)=>{
-    streamEl.innerHTML="";
-    if(snap.empty){
-      const e=document.createElement("div"); e.className="empty";
-      e.textContent="No messages yet. Send one from the chat link.";
-      streamEl.appendChild(e); return;
-    }
-    snap.docs.forEach(d=>{
-      const m=d.data();
-      streamEl.appendChild(bubble(m.role, m.text||""));
-      if(m.role==="customer" && m.takeaway) streamEl.appendChild(takeawayEl(m.takeaway));
-    });
-    streamEl.scrollTop=streamEl.scrollHeight;
-  });
-}
-
 function openDetail(id){
-  stopLive();
   const a=accounts[id],c=bandColor(a.band);
   const dv=a.delta>=0?"up":"down";
   const eng=a.eng.map(e=>`<div class="eng-row"><span class="n">${e[1]}</span><span class="lab">${e[0]}</span>${sentBar(e[2])}</div>`).join("");
-  // live seat gets functional controls; static companies have none
-  const ctrlHTML=a.live
-    ? `<div class="ctrl">
-        <button class="takeover" id="toggle">Take over</button>
-        <input class="hinput" id="hinput" placeholder="Type as Martin..." disabled />
-        <button class="hsend" id="hsend" disabled>Send</button>
-        <button class="reset" id="reset">Reset conversation</button>
-      </div>`
-    : "";
-  detail.innerHTML=`
+  const chat=a.chat.map(m=>{
+    if(m[0]==="customer") return `<div class="b customer">${m[1]}</div>`+(m[2]?`<div class="take"><b>Takeaway</b><span>${m[2]}</span></div>`:"");
+    return `<div class="b twin">${m[1]}</div>`;
+  }).join("");
+  document.getElementById("detail").innerHTML=`
     <button class="back" onclick="closeDetail()">← Back to book</button>
     <div class="dhead">
       <div><h2>${a.name}</h2><div class="seg">${a.seg}</div></div>
@@ -474,28 +349,19 @@ function openDetail(id){
         <div><h3>Live ramp conversation</h3><div class="sub">${a.live?"streaming from the customer chat":"recent ramp history"}</div></div>
         <div class="badge"><span class="g"></span> ${a.live?"Live":"Synced"}</div>
       </div>
-      <div class="stream" id="stream"></div>
-      ${ctrlHTML}
+      <div class="stream">${chat}</div>
+      <div class="ctrl"><button class="takeover">Take over</button><button class="reset">Reset conversation</button></div>
     </div>`;
-  portfolio.classList.add("hidden");
-  detail.classList.remove("hidden");
+  document.getElementById("portfolio").classList.add("hidden");
+  document.getElementById("detail").classList.remove("hidden");
   window.scrollTo(0,0);
   requestAnimationFrame(()=>{document.querySelectorAll("[data-target]").forEach(el=>{el.style.strokeDashoffset=el.getAttribute("data-target");});});
-
-  const streamEl=document.getElementById("stream");
-  if(a.live) wireLive(id, streamEl);
-  else renderStaticChat(streamEl, a.chat);
 }
 function closeDetail(){
-  stopLive();
-  detail.classList.add("hidden");
-  portfolio.classList.remove("hidden");
+  document.getElementById("detail").classList.add("hidden");
+  document.getElementById("portfolio").classList.remove("hidden");
   window.scrollTo(0,0);
 }
-
-// inline onclick handlers live in module scope; expose to the global scope
-window.openDetail=openDetail;
-window.closeDetail=closeDetail;
 
 renderTop();renderRows();renderRecents();
 </script>

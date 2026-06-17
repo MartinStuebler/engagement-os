@@ -6,6 +6,7 @@ service cloud.firestore {
       allow create: if request.resource.data.role in ["customer", "human"]
                     && request.resource.data.text is string
                     && request.resource.data.text.size() < 1000;
+      allow delete: if true; // demo-grade; enables the cockpit Reset button
     }
     match /accounts/{accountId} {
       allow read, write: if true; // demo-grade; production locks to server + Auth
