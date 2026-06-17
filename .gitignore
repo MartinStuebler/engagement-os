@@ -1,0 +1,13 @@
+node_modules/
+functions/node_modules/
+functions/.secret.local
+functions/.env
+functions/.env.*
+.env
+.env.*
+*.log
+.firebase/
+.DS_Store
+
+# build spec with twin persona, kept local
+Engagement-OS.md

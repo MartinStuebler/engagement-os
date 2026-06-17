@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Engagement OS</title>
+<style>
+  :root{--ink:#11202e;--teal:#0f9e8e;--amber:#d8862a;--line:#e2e6e3;--paper:#f5f6f4;--muted:#5b6b78;}
+  *{box-sizing:border-box} body{margin:0;font-family:system-ui,sans-serif;background:var(--paper);color:var(--ink)}
+  header{background:var(--ink);color:#eaf0ee;padding:14px 22px;display:flex;align-items:center;gap:12px}
+  header b{font-size:16px} header button{margin-left:auto;background:#243a4b;color:#cfe;border:0;border-radius:8px;padding:8px 12px;font-size:12px}
+  .wrap{max-width:1100px;margin:0 auto;padding:22px;display:grid;grid-template-columns:1fr 1.3fr;gap:18px}
+  @media(max-width:840px){.wrap{grid-template-columns:1fr}}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .acct{border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:12px;margin-bottom:10px;cursor:pointer}
+  .acct.risk{border-left-color:var(--amber)}
+  .acct.sel{background:#f0f7f5}
+  .acct .n{font-weight:600} .acct .s{font-size:12px;color:var(--muted)}
+  .acct .row{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:13px}
+  .pill{font-size:11px;padding:3px 8px;border-radius:99px;background:#e9f6f3;color:#0b7d70}
+  .pill.risk{background:#fbf0e4;color:#a85f1c}
+  .na{margin-top:8px;font-size:12.5px;background:#f3faf8;border:1px solid #d9ece7;border-radius:8px;padding:8px}
+  .acct.risk .na{background:#fdf5ec;border-color:#f0ddc4}
+  .conv{height:60vh;display:flex;flex-direction:column}
+  .stream{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px}
+  .b{max-width:86%;padding:8px 11px;border-radius:11px;font-size:14px;white-space:pre-wrap}
+  .b.customer{background:#eef3f1;align-self:flex-start} .b.twin{background:#e7f4f1;align-self:flex-end}
+  .b.human{background:var(--ink);color:#eaf0ee;align-self:flex-end}
+  .take{font-size:11px;color:var(--muted);margin:-2px 0 4px;align-self:flex-start;font-style:italic}
+  .ctrl{display:flex;gap:8px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+  .toggle{font-size:13px;font-weight:600;padding:8px 12px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer}
+  .toggle.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .ctrl input{flex:1;border:1px solid var(--line);border-radius:9px;padding:9px}
+  .ctrl button{background:var(--teal);color:#04221e;border:0;border-radius:9px;padding:0 14px;font-weight:600}
+  .ctrl button.reset{background:#fff;color:var(--amber);border:1px solid #f0ddc4;font-weight:600}
+  .empty{color:var(--muted);font-size:13px;padding:20px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <b>Engagement OS</b>
+  <span style="font-size:12px;opacity:.7">Relationship vitals</span>
+  <button id="seed">Seed demo data</button>
+</header>
+<div class="wrap">
+  <div class="panel">
+    <h2>Accounts</h2>
+    <div id="accts"></div>
+  </div>
+  <div class="panel">
+    <h2 id="convTitle">Live conversation</h2>
+    <div class="conv">
+      <div class="stream" id="stream"><div class="empty">Select an account to watch the conversation.</div></div>
+      <div class="ctrl">
+        <button class="toggle" id="toggle">Take over</button>
+        <input id="hinput" placeholder="Type as Martin (only sends in takeover mode)" disabled />
+        <button id="hsend" disabled>Send</button>
+        <button class="reset" id="reset" style="display:none">Reset conversation</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, addDoc, updateDoc, getDoc, getDocs, writeBatch, query, orderBy, onSnapshot, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB-_ooiEhmIRoOGxgrueJKJHv6DOj-kpGE",
+  authDomain: "engagement-os-c0294.firebaseapp.com",
+  projectId: "engagement-os-c0294",
+  storageBucket: "engagement-os-c0294.firebasestorage.app",
+  messagingSenderId: "262777909440",
+  appId: "1:262777909440:web:4662437f82eca8249b3d25",
+  measurementId: "G-9344JJVN4R"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const SEED = [
+  { id:"lumen", name:"Lumen Financial", segment:"Fintech, 1,200 employees", status:"healthy", health:84, stageIdx:3, mode:"ai",
+    nextAction:{ label:"Ready to expand", text:"Champion asked about a second team. Build the People Ops expansion case and loop in Sales." } },
+  { id:"vertex", name:"Vertex Logistics", segment:"Logistics, 800 employees", status:"risk", health:38, stageIdx:1, mode:"ai",
+    nextAction:{ label:"Step in now", text:"One recruiter carries usage, buyer silent 18 days. Book a call, engineer one visible win." } }
+];
+document.getElementById("seed").onclick = async ()=>{
+  for(const a of SEED){ await setDoc(doc(db,"accounts",a.id), { ...a, updatedAt: serverTimestamp() }, { merge:true }); }
+};
+
+let selected = null, unsub = null, currentMode = "ai";
+const acctsEl = document.getElementById("accts");
+
+onSnapshot(query(collection(db,"accounts")), (snap)=>{
+  const items = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+  items.sort((a,b)=>(a.health??50)-(b.health??50));
+  acctsEl.innerHTML = "";
+  items.forEach(a=>{
+    const el = document.createElement("div");
+    el.className = "acct " + (a.status==="risk"?"risk ":"") + (a.id===selected?"sel":"");
+    const na = a.nextAction || { label:"Monitoring", text:"Live demo seat. Watch it fill in." };
+    el.innerHTML = `<div class="n"></div><div class="s"></div>
+      <div class="row"><span>Health</span><b>${a.health??"-"}/100</b></div>
+      <div class="row"><span class="pill ${a.status==="risk"?"risk":""}"></span><span style="font-size:12px;color:#5b6b78">${a.mode==="human"?"You are in":"Twin active"}</span></div>
+      <div class="na"><b></b><div style="margin-top:3px"></div></div>`;
+    el.querySelector(".n").textContent = a.name || a.id;
+    el.querySelector(".s").textContent = a.segment || "";
+    el.querySelector(".pill").textContent = a.status==="risk" ? "At risk" : "Healthy";
+    el.querySelector(".na b").textContent = na.label;
+    el.querySelector(".na div").textContent = na.text;
+    el.onclick = ()=>select(a.id, a.name||a.id, a.mode||"ai");
+    acctsEl.appendChild(el);
+  });
+});
+
+const streamEl = document.getElementById("stream");
+const toggle = document.getElementById("toggle");
+const hinput = document.getElementById("hinput");
+const hsend = document.getElementById("hsend");
+const resetBtn = document.getElementById("reset");
+
+function select(id, name, mode){
+  selected = id; currentMode = mode;
+  document.getElementById("convTitle").textContent = "Live conversation, " + name;
+  resetBtn.style.display = "inline-block";   // reset is available once an account is selected
+  setTakeoverUI(mode==="human");
+  if(unsub) unsub();
+  const msgsRef = collection(db,"conversations",id,"messages");
+  unsub = onSnapshot(query(msgsRef, orderBy("createdAt","asc")), (snap)=>{
+    streamEl.innerHTML = "";
+    if(snap.empty){ streamEl.innerHTML = '<div class="empty">No messages yet. Send one from the chat link.</div>'; return; }
+    snap.docs.forEach(d=>{
+      const m = d.data();
+      const b = document.createElement("div"); b.className = "b " + m.role; b.textContent = m.text;
+      streamEl.appendChild(b);
+      if(m.role==="customer" && m.takeaway){ const t=document.createElement("div"); t.className="take"; t.textContent="↳ "+m.takeaway; streamEl.appendChild(t); }
+    });
+    streamEl.scrollTop = streamEl.scrollHeight;
+  });
+}
+function setTakeoverUI(on){
+  toggle.classList.toggle("on", on);
+  toggle.textContent = on ? "Hand back to twin" : "Take over";
+  hinput.disabled = !on; hsend.disabled = !on;
+}
+toggle.onclick = async ()=>{
+  if(!selected) return;
+  currentMode = currentMode==="human" ? "ai" : "human";
+  await updateDoc(doc(db,"accounts",selected), { mode: currentMode });
+  setTakeoverUI(currentMode==="human");
+};
+async function sendHuman(){
+  if(!selected || currentMode!=="human") return;
+  const text = hinput.value.trim(); if(!text) return; hinput.value="";
+  await addDoc(collection(db,"conversations",selected,"messages"), { role:"human", text, takeaway:null, createdAt: serverTimestamp() });
+}
+hsend.onclick = sendHuman;
+hinput.addEventListener("keydown", e=>{ if(e.key==="Enter") sendHuman(); });
+
+// Reset: delete every message under the selected account. The web SDK has no
+// recursive delete, so we fetch all docs and remove them in batches (limit 500).
+async function resetConversation(){
+  if(!selected) return;
+  if(!confirm("Delete all messages for this account? This cannot be undone.")) return;
+  resetBtn.disabled = true;
+  try {
+    const snap = await getDocs(collection(db,"conversations",selected,"messages"));
+    let batch = writeBatch(db), pending = 0;
+    for(const d of snap.docs){
+      batch.delete(d.ref); pending++;
+      if(pending === 450){ await batch.commit(); batch = writeBatch(db); pending = 0; }
+    }
+    if(pending > 0) await batch.commit();
+    // the live panel empties on its own via the existing onSnapshot listener
+  } catch(err){
+    console.error("reset failed", err);
+    alert("Reset failed. Check the console.");
+  } finally {
+    resetBtn.disabled = false;
+  }
+}
+resetBtn.onclick = resetConversation;
+</script>
+</body>
+</html>
