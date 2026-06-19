@@ -26,7 +26,7 @@
 </head>
 <body>
 <div class="app">
-  <header><b>Ramp Assistant</b><span id="acctName"></span></header>
+  <header><b>Metaview</b><span style="color:#9aa7af;font-size:15px;opacity:1">digital twin Martin</span></header>
   <div class="msgs" id="msgs"></div>
   <form id="form" autocomplete="off">
     <input id="input" placeholder="Ask anything about getting started..." />
@@ -54,7 +54,6 @@ const db = getFirestore(app);
 const params = new URLSearchParams(location.search);
 const accountId = params.get("account") || "demo-co";
 const niceName = accountId.replace(/-/g," ").replace(/\b\w/g,c=>c.toUpperCase());
-document.getElementById("acctName").textContent = niceName;
 
 // ensure the account exists so the cockpit shows it (demo-grade rules allow this)
 setDoc(doc(db,"accounts",accountId), { name:niceName, segment:"Live demo seat", status:"healthy", health:60, stageIdx:1, mode:"ai", updatedAt: serverTimestamp() }, { merge:true });
