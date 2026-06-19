@@ -169,7 +169,7 @@ tbody td{padding:13px 18px;font-size:13.5px;vertical-align:middle}
   <div class="tbl-wrap">
     <div class="tbl-head"><h3>Companies</h3><span class="hint">sorted by risk, riskiest first</span></div>
     <table>
-      <thead><tr><th>Account</th><th>Health</th><th>Adoption stage</th><th>Signal</th><th>Next action</th><th></th></tr></thead>
+      <thead><tr><th>Account</th><th>Health</th><th>Signal</th><th>Next action</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
   </div>
@@ -283,7 +283,7 @@ function renderTop(){
   const max=Math.max(lo,med,hi,1);
   const col=(c,n,lab)=>`<div class="col"><div class="cnt">${n}</div><div class="bar" style="background:${c};height:${Math.max(6,(n/max)*50)}px"></div><div class="lab">${lab}</div></div>`;
   document.getElementById("toprow").innerHTML=`
-    <div class="kpi"><div class="k">Expansion pipeline</div><div class="v">$210K</div><div class="sub">1 ready · 1 soon</div></div>
+    <div class="kpi"><div class="k">Expansion pipeline</div><div class="v">$850K</div><div class="sub">1 ready · 1 soon</div></div>
     <div class="kpi"><div class="k">Active this week</div><div class="v">47<small> chats</small></div><div class="sub">+9 vs last week</div></div>
     <div class="kpi pbh-tile"><div class="k">Portfolio by health</div><div class="dist">${col("var(--red)",lo,"Low")+col("var(--amber)",med,"Medium")+col("var(--teal)",hi,"High")}</div></div>`;
 }
@@ -295,7 +295,6 @@ function renderRows(){
     return `<tr onclick="openDetail('${id}')">
       <td><div class="co">${a.name}${live}<div class="seg">${a.seg}</div></div></td>
       <td><div class="hmini"><b>${a.health}</b><div class="hbar"><i style="width:${a.health}%;background:${c}"></i></div></div></td>
-      <td style="font-size:13px">${KOTTER[a.stageIdx]}</td>
       <td><span class="pill ${bandPill(a.band)}">${a.signal}</span></td>
       <td><div class="na-cell ${a.na}"><b>${a.naLabel}</b></div></td>
       <td><span class="arrow">→</span></td>
