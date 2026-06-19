@@ -161,7 +161,6 @@ tbody td{padding:13px 18px;font-size:13.5px;vertical-align:middle}
   <div class="brand">
     <div><h1>Engagement Dashboard</h1></div>
   </div>
-  <div class="live-tag"><span class="g"></span> Live book</div>
 </div>
 
 <!-- PORTFOLIO -->
@@ -259,7 +258,7 @@ const accounts={
     ],
     case:{title:"Expansion case",p:["Meridian has its first visible win and is naming a second team. This is the moment to widen before the quarter closes.","Package the corporate-recruiting proof and walk it into store-hiring, then hand Sales a warm second-seat motion."],act:"Draft expansion brief"}},
 
-  lumen:{name:"Lumen Financial",seg:"Fintech · 1,200 employees",band:"hi",health:84,delta:6,stageIdx:3,
+  lumen:{name:"Lumen Financial",seg:"Fintech · 1,200 employees",band:"hi",health:84,delta:6,stageIdx:3,liveTag:true,
     signal:"Champion asked about a 2nd team",na:"expand",naLabel:"Ready to expand",
     trend:[70,72,71,74,76,75,78,80,79,82,83,84],
     eng:[["Ramp chats",31,[80,16,4]],["Questions answered",88,[82,14,4]],["Escalations to you",2,[100,0,0]]],
@@ -292,7 +291,7 @@ function renderTop(){
 function renderRows(){
   document.getElementById("rows").innerHTML=ORDER.map(id=>{
     const a=accounts[id],c=bandColor(a.band);
-    const live=a.live?`<span class="liveflag"><span class="g"></span>Live</span>`:"";
+    const live=(a.live||a.liveTag)?`<span class="liveflag"><span class="g"></span>Live</span>`:"";
     return `<tr onclick="openDetail('${id}')">
       <td><div class="co">${a.name}${live}<div class="seg">${a.seg}</div></div></td>
       <td><div class="hmini"><b>${a.health}</b><div class="hbar"><i style="width:${a.health}%;background:${c}"></i></div></div></td>
