@@ -16,9 +16,9 @@ Built to solve a problem I lived running enterprise pilots: adoption stalls quie
 | --- | --- |
 | ![Live conversation](screenshots/live.png) | ![Takeover](screenshots/takeover.png) |
 
-**Customer ramp chat (mobile)**
-
-<img src="screenshots/chat.png" width="300" alt="Customer ramp chat on mobile" />
+| Customer ramp chat (mobile) |
+| --- |
+| <img src="screenshots/chat.png" width="300" alt="Customer ramp chat on mobile" /> |
 
 ## What it does
 
