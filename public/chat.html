@@ -26,7 +26,7 @@
 </head>
 <body>
 <div class="app">
-  <header><b>Metaview</b><span style="color:#9aa7af;font-size:15px;opacity:1">digital twin Martin</span></header>
+  <header><b>Metaview</b><span style="color:#9aa7af;font-size:15px;opacity:1">Martin</span></header>
   <div class="msgs" id="msgs"></div>
   <form id="form" autocomplete="off">
     <input id="input" placeholder="Ask anything about getting started..." />
@@ -72,7 +72,7 @@ function showTyping(){ if(typingEl) return; typingEl=document.createElement("div
 function hideTyping(){ if(typingEl){ typingEl.remove(); typingEl=null; } }
 
 // local greeting, not stored, keeps the API history clean
-addBubble("twin", "Hi, I'm Martin. I'll help your team get up and running on Metaview. What's on your mind? Anything from first steps to rolling it out.");
+addBubble("twin", "Hi, I'm Martin's digital twin. I'll help your team get up and running on Metaview. What's on your mind? Anything from first steps to rolling it out.");
 
 const msgsRef = collection(db, "conversations", accountId, "messages");
 let known = new Set();
